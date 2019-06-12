@@ -7,6 +7,7 @@
 #import <FirebaseFunctions/FIRError.h>
 
 @implementation RNFirebaseFunctions
+FIRFunctions *functions;
 RCT_EXPORT_MODULE();
 
 RCT_EXPORT_METHOD(httpsCallable:
@@ -22,8 +23,10 @@ RCT_EXPORT_METHOD(httpsCallable:
                   rejecter:
                   (RCTPromiseRejectBlock) reject
                  ){
-    FIRApp *firebaseApp = [RNFirebaseUtil getApp:appName];
-    FIRFunctions *functions = [FIRFunctions functionsForApp:firebaseApp region:region];
+    if (functions == nil) {
+        FIRApp *firebaseApp = [RNFirebaseUtil getApp:appName];
+        functions = [FIRFunctions functionsForApp:firebaseApp region:region];
+    }
     
     FIRHTTPSCallable *callable = [functions HTTPSCallableWithName:name];
     
@@ -64,8 +67,10 @@ RCT_EXPORT_METHOD(useFunctionsEmulator:
                   rejecter:
                   (RCTPromiseRejectBlock) reject
                  ){
-    FIRApp *firebaseApp = [RNFirebaseUtil getApp:appName];
-    FIRFunctions *functions = [FIRFunctions functionsForApp:firebaseApp region:region];
+    if (functions == nil) {
+        FIRApp *firebaseApp = [RNFirebaseUtil getApp:appName];
+        functions = [FIRFunctions functionsForApp:firebaseApp region:region];
+    }
     [functions useFunctionsEmulatorOrigin:origin];
     resolve([NSNull null]);
 }
@@ -138,4 +143,3 @@ RCT_EXPORT_METHOD(useFunctionsEmulator:
 @implementation RNFirebaseFunctions
 @end
 #endif
-
